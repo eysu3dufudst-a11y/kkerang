@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ video.title }}</title>
+    <style>
+        body { margin:0; font-family:sans-serif; background:#0f0f0f; color:white; }
+        .container { display:flex; padding:20px; }
+        .main { flex:3; }
+        .side { flex:1; margin-left:20px; }
+        video { width:100%; max-height:70vh; background:black; }
+        a { color:white; text-decoration:none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="main">
+        <video
+            src="{{ url_for('stream_video', filename=video.filename) }}"
+            controls
+            controlsList="nodownload noremoteplayback"
+            disablePictureInPicture
+            oncontextmenu="return false;"
+        ></video>
+
+        <h2>{{ video.title }}</h2>
+        <p>조회수 {{ video.views }} · 좋아요 {{ video.likes }}</p>
+
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('like', id=video.id) }}">👍 좋아요</a>
+        {% endif %}
+    </div>
+
+    <div class="side">
+        <h3>추천 영상</h3>
+        {% for v in recommends %}
+            <div style="margin-bottom:10px;">
+                <a href="{{ url_for('watch', id=v.id) }}">{{ v.title }}</a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+</body>
+</html>
+ cx
