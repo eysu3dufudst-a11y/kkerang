@@ -1,6 +1,68 @@
-<form method="post">
-<h2>로그인</h2>
-<input name="username" placeholder="아이디"><br>
-<input type="password" name="password" placeholder="비밀번호"><br>
-<button>로그인</button>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>로그인 · 께랑께랑</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{
+    margin:0;
+    background:#0f0f0f;
+    color:white;
+    font-family:Arial,sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+.box{
+    background:#1c1c1c;
+    padding:32px;
+    border-radius:14px;
+    width:100%;
+    max-width:380px;
+}
+h2{text-align:center;margin-bottom:20px}
+input{
+    width:100%;
+    padding:12px;
+    margin-bottom:14px;
+    border-radius:8px;
+    border:none;
+    background:#2a2a2a;
+    color:white;
+    font-size:15px;
+}
+button{
+    width:100%;
+    padding:12px;
+    background:#ff0000;
+    border:none;
+    border-radius:8px;
+    color:white;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+}
+a{
+    display:block;
+    text-align:center;
+    margin-top:14px;
+    color:#aaa;
+    text-decoration:none;
+    font-size:14px;
+}
+</style>
+</head>
+<body>
+
+<form class="box" method="POST">
+    <h2>로그인</h2>
+    <input name="username" placeholder="아이디" required>
+    <input type="password" name="password" placeholder="비밀번호" required>
+    <button>로그인</button>
+    <a href="/register">계정이 없나요? 회원가입</a>
 </form>
+
+</body>
+</html>
