@@ -1,23 +1,26 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-import os
 from datetime import datetime
+import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///kkerang.db'
 app.config['UPLOAD_FOLDER'] = 'static/videos'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-login_manager = LoginManager(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-# =====================
-# DB MODELS
-# =====================
+# ======================
+# MODELS
+# ======================
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -26,17 +29,17 @@ class User(db.Model, UserMixin):
 
 class Video(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200))
-    filename = db.Column(db.String(200))
+    title = db.Column(db.String(200), nullable=False)
+    filename = db.Column(db.String(200), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# =====================
+# ======================
 # ROUTES
-# =====================
+# ======================
 
 @app.route('/')
 def index():
@@ -87,8 +90,8 @@ def upload():
         title = request.form.get('title')
         file = request.files.get('video')
 
-        if not file or title == '':
-            return "입력 안됨"
+        if not title or not file:
+            return "제목 또는 파일 없음"
 
         filename = secure_filename(file.filename)
         os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -102,7 +105,12 @@ def upload():
 
     return render_template('upload.html')
 
+# ======================
+# DB AUTO CREATE (🔥 핵심)
+# ======================
+
+with app.app_context():
+    db.create_all()
+
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
     app.run(debug=True)
