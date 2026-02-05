@@ -1,131 +1,39 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>kkerang</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <style>
-        body {
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: #0f0f0f;
-            color: #fff;
-        }
-
-        header {
-            position: sticky;
-            top: 0;
-            background: #0f0f0f;
-            padding: 12px 16px;
-            font-size: 20px;
-            font-weight: bold;
-            border-bottom: 1px solid #222;
-            z-index: 10;
-        }
-
-        .container {
-            padding: 16px;
-            max-width: 1400px;
-            margin: auto;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 16px;
-        }
-
-        .card {
-            cursor: pointer;
-        }
-
-        .thumb {
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            background: #222;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .thumb video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .info {
-            margin-top: 8px;
-        }
-
-        .title {
-            font-size: 15px;
-            font-weight: 600;
-            line-height: 1.3;
-            margin-bottom: 4px;
-        }
-
-        .meta {
-            font-size: 13px;
-            color: #aaa;
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        @media (max-width: 600px) {
-            header {
-                font-size: 18px;
-            }
-        }
-    </style>
+<meta charset="utf-8">
+<title>껴랑껴랑</title>
+<style>
+body{background:#0f0f0f;color:white;font-family:sans-serif}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.card video{width:100%;border-radius:12px}
+a{color:white;text-decoration:none}
+.top{display:flex;justify-content:space-between;margin-bottom:20px}
+</style>
 </head>
-
 <body>
-<header>
-    🎬 kkerang
-</header>
 
-<div class="container">
-    {% if videos %}
-    <div class="grid">
-        {% for video in videos %}
-        <a href="/watch/{{ video.id }}">
-            <div class="card">
-                <div class="thumb">
-                    <video src="/video/{{ video.filename }}" muted></video>
-                </div>
-                <div class="info">
-                    <div class="title">{{ video.title }}</div>
-                    <div class="meta">
-                        조회수 {{ video.views }} · 좋아요 {{ video.likes }}
-                    </div>
-                </div>
-            </div>
-        </a>
-        {% endfor %}
-    </div>
-    {% else %}
-        <p>아직 업로드된 영상이 없습니다.</p>
-    {% endif %}
+<div class="top">
+<h2>껴랑껴랑</h2>
+<div>
+{% if current_user.is_authenticated %}
+<a href="/upload">업로드</a> |
+<a href="/logout">로그아웃</a>
+{% else %}
+<a href="/login">로그인</a> |
+<a href="/register">회원가입</a>
+{% endif %}
+</div>
 </div>
 
-<script>
-    // 썸네일 호버 시 미리 재생 (유튜브 느낌)
-    document.querySelectorAll(".thumb video").forEach(v => {
-        v.addEventListener("mouseenter", () => {
-            v.currentTime = 0;
-            v.play();
-        });
-        v.addEventListener("mouseleave", () => {
-            v.pause();
-            v.currentTime = 0;
-        });
-    });
-</script>
+<div class="grid">
+{% for video in videos %}
+<div class="card">
+<video src="/static/videos/{{ video.filename }}" controls></video>
+<p>{{ video.title }}</p>
+</div>
+{% endfor %}
+</div>
 
 </body>
 </html>
-
